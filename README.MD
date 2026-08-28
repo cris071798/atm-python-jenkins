@@ -19,3 +19,5 @@ El proyecto incluye pruebas unitarias que serán ejecutadas automáticamente med
 ## Pruebas
 
 El proyecto contiene seis pruebas unitarias para verificar el funcionamiento de la aplicación.
+
+Prueba de Integración Continua - Fase 1
