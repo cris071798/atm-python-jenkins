@@ -1,5 +1,9 @@
 pipeline {
-    agent { label 'built-in' }
+     agent { label 'built-in' }
+    
+     environment {
+     PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+}
 
     stages {
         stage('Checkout') {
@@ -11,7 +15,7 @@ pipeline {
 
         stage('Verificar Python') {
             steps {
-                sh '/usr/bin/python3.11 --version'
+                sh 'command -v python3.11 && python3.11 --version'
             }
         }
 
@@ -23,13 +27,13 @@ pipeline {
 
         stage('Instalar Dependencias') {
             steps {
-                sh '/usr/bin/python3.11 -m pip install -r requirements.txt'
+                sh 'python3.11 -m pip install -r requirements.txt'
             }
         }
 
         stage('Ejecutar Pruebas Python') {
             steps {
-                sh '/usr/bin/python3.11 test_atm.py'
+                sh 'python3.11 test_atm.py'
             }
         }
 
