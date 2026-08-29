@@ -1,53 +1,35 @@
 pipeline {
-    agent { label 'built-in' }
+    agent any
 
     stages {
-        stage('Checkout') {
+        stage('Diagnostico Final') {
             steps {
-                echo 'Obteniendo el código del repositorio...'
-                checkout scm
-            }
-        }
+                sh '''
+                    echo "===== PROCESO DEL PIPELINE ====="
+                    echo "PID SHELL: $$"
+                    echo "PPID: $PPID"
 
-        stage('Verificar Docker') {
-            steps {
-                sh '/var/lib/jenkins/docker --version'
-            }
-        }
+                    echo "===== MOUNT DEL SHELL ====="
+                    readlink /proc/$$/ns/mnt || true
 
-        stage('Construir Imagen Base') {
-            steps {
-                sh '/var/lib/jenkins/docker build -t atm-python-base:1.0 -f Dockerfile.base .'
-            }
-        }
+                    echo "===== ROOT DEL SHELL ====="
+                    readlink /proc/$$/root || true
 
-        stage('Verificar Python') {
-            steps {
-                sh '/var/lib/jenkins/docker run --rm atm-python-base:1.0 python --version'
-            }
-        }
+                    echo "===== PROCESOS JAVA ====="
+                    ps -ef | grep java || true
 
-        stage('Ejecutar Pruebas Python') {
-            steps {
-                sh '/var/lib/jenkins/docker run --rm -v "$PWD:/app" -w /app atm-python-base:1.0 python test_atm.py'
-            }
-        }
+                    echo "===== ARCHIVOS VISIBLES ====="
+                    ls -l /usr/bin/git || true
+                    ls -l /usr/bin/docker || true
+                    ls -l /usr/bin/python3.11 || true
 
-        stage('Construir Imagen Docker') {
-            steps {
-                sh '/var/lib/jenkins/docker build -t atm-python:latest .'
-            }
-        }
+                    echo "===== PROBAR ROOT DEL PID 1 ====="
+                    ls -l /proc/1/root/usr/bin/docker || true
+                    ls -l /proc/1/root/usr/bin/python3.11 || true
 
-        stage('Ejecutar Pruebas en Docker') {
-            steps {
-                sh '/var/lib/jenkins/docker run --rm atm-python:latest python test_atm.py'
-            }
-        }
-
-        stage('Finalizado') {
-            steps {
-                echo 'Pipeline ejecutado correctamente con Python, pruebas y Docker.'
+                    /proc/1/root/usr/bin/docker --version || true
+                    /proc/1/root/usr/bin/python3.11 --version || true
+                '''
             }
         }
     }
