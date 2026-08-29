@@ -6,8 +6,8 @@ pipeline {
             steps {
                 sh '''
                     echo "PID DEL SHELL: $$"
-                    echo "Esperando 180 segundos..."
-                    sleep 180
+                    echo "Esperando 600 segundos..."
+                    sleep 600
                 '''
             }
         }
