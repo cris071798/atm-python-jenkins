@@ -2,13 +2,34 @@ pipeline {
     agent any
 
     stages {
-        stage('Localizar entorno Jenkins') {
+        stage('Checkout') {
             steps {
-                sh '''
-                    echo "PID DEL SHELL: $$"
-                    echo "Esperando 600 segundos..."
-                    sleep 600
-                '''
+                echo 'Obteniendo el código del repositorio...'
+                checkout scm
+            }
+        }
+
+        stage('Verificar Python') {
+            steps {
+                sh 'python3 --version'
+            }
+        }
+
+        stage('Instalar Dependencias') {
+            steps {
+                sh 'pip3 install -r requirements.txt'
+            }
+        }
+
+        stage('Ejecutar Pruebas') {
+            steps {
+                sh 'python3 test_atm.py'
+            }
+        }
+
+        stage('Finalizado') {
+            steps {
+                echo 'Pipeline ejecutado correctamente.'
             }
         }
     }
