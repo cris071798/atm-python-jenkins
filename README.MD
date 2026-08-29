@@ -23,3 +23,4 @@ El proyecto contiene seis pruebas unitarias para verificar el funcionamiento de 
 Prueba de Integración Continua - Fase 1
 
 Video Final Integración Continua
+Evidencia de ejecución automatizada - Fase 2
