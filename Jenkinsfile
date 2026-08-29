@@ -11,19 +11,19 @@ pipeline {
 
         stage('Verificar Python') {
             steps {
-                sh 'python3 --version'
+                sh '/usr/bin/python3.11 --version'
             }
         }
 
         stage('Instalar Dependencias') {
             steps {
-                sh 'pip3 install -r requirements.txt'
+                sh '/usr/bin/python3.11 -m pip install -r requirements.txt'
             }
         }
 
         stage('Ejecutar Pruebas') {
             steps {
-                sh 'python3 test_atm.py'
+                sh '/usr/bin/python3.11 test_atm.py'
             }
         }
 
