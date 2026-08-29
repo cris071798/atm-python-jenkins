@@ -1,9 +1,5 @@
 pipeline {
-     agent { label 'built-in' }
-    
-     environment {
-     PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-}
+    agent { label 'built-in' }
 
     stages {
         stage('Checkout') {
@@ -13,27 +9,27 @@ pipeline {
             }
         }
 
-        stage('Verificar Python') {
-            steps {
-                sh 'command -v python3.11 && python3.11 --version'
-            }
-        }
-
         stage('Verificar Docker') {
             steps {
                 sh 'docker --version'
             }
         }
 
-        stage('Instalar Dependencias') {
+        stage('Construir Imagen Base') {
             steps {
-                sh 'python3.11 -m pip install -r requirements.txt'
+                sh 'docker build -t atm-python-base:1.0 -f Dockerfile.base .'
+            }
+        }
+
+        stage('Verificar Python') {
+            steps {
+                sh 'docker run --rm atm-python-base:1.0 python --version'
             }
         }
 
         stage('Ejecutar Pruebas Python') {
             steps {
-                sh 'python3.11 test_atm.py'
+                sh 'docker run --rm -v "$PWD:/app" -w /app atm-python-base:1.0 python test_atm.py'
             }
         }
 
